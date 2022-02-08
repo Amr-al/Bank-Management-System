@@ -6,7 +6,8 @@ void main_view();
 ll string_to_int(string s)
 {
     ll res = 0;
-    for(auto it:s){
+    for(auto it:s)
+    {
         res *= 10;
         res +=(it-'0');
     }
@@ -15,7 +16,8 @@ ll string_to_int(string s)
 string int_to_string(ll n)
 {
     string res;
-    while(n){
+    while(n)
+    {
         res.push_back(n%10 + '0');
         n/=10;
     }
@@ -49,14 +51,16 @@ void new_account() /// function to create a new account
         cin >> name;
         cout << "\t\tEnter Type of the Account (CURRENT/SAVING) : ";
         cin >> type;
-        for_each(type.begin(), type.end(), [](char & c){
+        for_each(type.begin(), type.end(), [](char & c)
+        {
             c = ::toupper(c);
         });
         while(type != "CURRENT" && type != "SAVING")
         {
             cout << "\t\tEnter Type of the Account (CURRENT/SAVING) : ";
             cin >> type;
-            for_each(type.begin(), type.end(), [](char & c){
+            for_each(type.begin(), type.end(), [](char & c)
+            {
                 c = ::toupper(c);
             });
         }
@@ -89,7 +93,8 @@ void show_account() /// function to show the account details
     string ac_num,tmp,tmp2,name,type;
     cout << "\n\n\n\t\tEnter the Account No. : ";
     cin >> ac_num;
-    ifstream myfile; int check = 0;
+    ifstream myfile;
+    int check = 0;
     myfile.open("clients_data.txt");
 
     while(getline(myfile, tmp) && !check)
@@ -97,7 +102,8 @@ void show_account() /// function to show the account details
         tmp2 = tmp;
         auto it = tmp.find(' ');
         tmp.erase(it,tmp.size());
-        if(tmp == ac_num){
+        if(tmp == ac_num)
+        {
             check = 1;
             system("CLS");
             cout<<"\t\t\t====================================================\n";
@@ -138,14 +144,16 @@ void deposit()
     cout << "\n\n\n\t\tEnter the Account No. : ";
     cin >> ac_num;
     cout << "\n\n";
-    ifstream myfile; int check = 0;
+    ifstream myfile;
+    int check = 0;
     myfile.open("clients_data.txt");
 
     while(getline(myfile, tmp))
     {
         tmp2 = tmp;
         auto it = tmp2.find(' ');
-        if(tmp.substr(0,it) == ac_num){
+        if(tmp.substr(0,it) == ac_num)
+        {
             check = 1;
             cout << "\t\tAccount No. : " << ac_num << "\n";
             tmp2.erase(0,it+1);
@@ -164,13 +172,16 @@ void deposit()
         }
     }
     myfile.close();
-    if(!check){
+    if(!check)
+    {
         system("CLS");
         cout << "\n\n\t\t\t\t\t THERE IS NO SUCH ACCOUNT";
         _sleep(2000);
         system("CLS");
         main_view();
-    }else{
+    }
+    else
+    {
         myfile.open("clients_data.txt");
         ofstream out("tmp.txt"),file;
         while(getline(myfile,tmp2))
@@ -198,7 +209,32 @@ void deposit()
     system("CLS");
     main_view();
 }
-
+void show_all()
+{
+    ifstream myfile;
+    myfile.open("clients_data.txt");
+    string tmp,tmp2;
+    system("CLS");
+    cout<<"\t\t\t====================================================\n";
+    cout<<"\t\t\t| A/c no.        NAME        Type        Balance   |\n ";
+    cout<<"\t\t\t====================================================\n";
+    while(getline(myfile,tmp))
+    {
+        auto it = tmp.find(' ');
+        cout << "\t\t\t  " << tmp.substr(0,it) << "\t\t ";
+        tmp.erase(0,it+1);
+        it = tmp.find(' ');
+        cout << tmp.substr(0,it) << "\t     ";
+        tmp.erase(0,it+1);
+        it = tmp.find(' ');
+        cout << tmp.substr(0,it) << "\t ";
+        tmp.erase(0,it+1);
+        cout << tmp << endl;
+    }
+    _sleep(4000);
+    myfile.close();
+    main_view();
+}
 void with_draw()
 {
     system("CLS");
@@ -207,14 +243,16 @@ void with_draw()
     cout << "\n\n\n\t\tEnter the Account No. : ";
     cin >> ac_num;
     cout << "\n\n";
-    ifstream myfile; int check = 0;
+    ifstream myfile;
+    int check = 0;
     myfile.open("clients_data.txt");
 
     while(getline(myfile, tmp))
     {
         tmp2 = tmp;
         auto it = tmp2.find(' ');
-        if(tmp.substr(0,it) == ac_num){
+        if(tmp.substr(0,it) == ac_num)
+        {
             check = 1;
             cout << "\t\tAccount No. : " << ac_num << "\n";
             tmp2.erase(0,it+1);
@@ -242,13 +280,16 @@ void with_draw()
         }
     }
     myfile.close();
-    if(!check){
+    if(!check)
+    {
         system("CLS");
         cout << "\n\n\t\t\t\t\t THERE IS NO SUCH ACCOUNT";
         _sleep(2000);
         system("CLS");
         main_view();
-    }else{
+    }
+    else
+    {
         myfile.open("clients_data.txt");
         ofstream out("tmp.txt"),file;
         while(getline(myfile,tmp2))
@@ -271,6 +312,52 @@ void with_draw()
         file << tmp << "\n";
         file.close();
     }
+    cout << "\t\tPROCESS DONE SUCESSFULLY";
+    _sleep(2000);
+    system("CLS");
+    main_view();
+}
+void close_account()
+{
+    system("CLS");
+    ifstream myfile;
+    myfile.open("clients_data.txt");
+    string tmp,ac_num,tmp2;
+    int check = 0;
+    cout << "\n\n\n\t\tEnter the Account No. : ";
+    cin >> ac_num;
+    while(getline(myfile,tmp))
+    {
+        auto it = tmp.find(' ');
+        if(tmp.substr(0,it) == ac_num)
+        {
+            check = 1;
+            tmp2 = tmp;
+            break;
+        }
+    }
+    myfile.close();
+    if(!check)
+    {
+        cout << "\t\tTHERE IS NO SUCH ACCOUNT";
+        _sleep(2000);
+        system("CLS");
+        main_view();
+        return;
+    }
+    ofstream tmpfile;
+    tmpfile.open("TMP.txt");
+    myfile.open("clients_data.txt");
+    while(getline(myfile,tmp))
+    {
+        if(tmp == tmp2)
+            continue;
+        tmpfile << tmp << "\n";
+    }
+    tmpfile.close();
+    myfile.close();
+    remove("clients_data.txt");
+    rename("TMP.txt","clients_data.txt");
     cout << "\t\tPROCESS DONE SUCESSFULLY";
     _sleep(2000);
     system("CLS");
@@ -311,7 +398,7 @@ void main_view() /// this function to show the pattern on screen
         {
             new_account();
         }
-        if(choose == "5")
+        if(choose == "4")
         {
             show_account();
         }
@@ -322,6 +409,14 @@ void main_view() /// this function to show the pattern on screen
         if(choose == "2")
         {
             with_draw();
+        }
+        if(choose == "5")
+        {
+            show_all();
+        }
+        if(choose == "6")
+        {
+            close_account();
         }
     }
     while(choose != "8");
