@@ -363,6 +363,80 @@ void close_account()
     system("CLS");
     main_view();
 }
+void modify()
+{
+    system("CLS");
+    string tmp,name,ac_num,type,amount,tmp2,newac="";
+    cout << "\n\n\n\t\tEnter the Account No. : ";
+    cin >> ac_num;
+    cout << "\n\n";
+    ifstream myfile("clients_data.txt");
+    while(getline(myfile,tmp))
+    {
+        auto it = tmp.find(' ');
+        tmp2 = tmp;
+        if(tmp.substr(0,it) == ac_num)
+        {
+            cout << "\t\tAccount No. : " << ac_num << "\n";
+            tmp.erase(0,it+1);
+            it = tmp.find(' ');
+            cout << "\t\tAccount Holder Name : " << tmp.substr(0,it) <<'\n';
+            tmp.erase(0,it+1);
+            it = tmp.find(' ');
+            cout << "\t\tType of Account : " << tmp.substr(0,it) << '\n';
+            tmp.erase(0,it+1);
+            amount = tmp;
+            cout << "\t\tBalance amount : " << amount << "\n\n";
+            cout << "\t\tEnter The New Details of account\n\n";
+            cout << "\t\tModify Account Holder Name : ";
+            cin >> name;
+            cout << "\n\t\tModify Type of Account : ";
+            cin >> type;
+            for_each(type.begin(), type.end(), [](char & c)
+            {
+                c = toupper(c);
+            });
+            while(type != "CURRENT" && type != "SAVING"){
+                cout << "\n\t\Type of the Account should be (CURRENT/SAVING) : ";
+                cin >> type;
+                for_each(type.begin(), type.end(), [](char & c)
+                {
+                    c = toupper(c);
+                });
+            }
+            cout << "\n\t\tModify Balance amount : ";
+            cin >> amount;
+            newac = ac_num + ' ' + name + ' ' + type + ' ' + amount;
+        }
+    }
+    myfile.close();
+    if(newac.empty()){
+        cout << "\t\tTHERE IS NO SUCH ACCOUNT";
+        _sleep(2000);
+        system("CLS");
+        main_view();
+        return;
+    }
+    myfile.open("clients_data.txt");
+    ofstream tmpfile("tmp.txt");
+    while(getline(myfile,tmp))
+    {
+        if(tmp == tmp2)
+        {
+            tmpfile << tmp2 << "\n";
+            continue;
+        }
+        tmpfile << tmp << "\n";
+    }
+    tmpfile.close();
+    myfile.close();
+    remove("clients_data");
+    rename("tmp.txt","clients_data.txt");
+    cout << "\t\tPROCESS DONE SUCESSFULLY";
+    _sleep(2000);
+    system("CLS");
+    main_view();
+}
 void main_view() /// this function to show the pattern on screen
 {
     system("CLS");
@@ -398,17 +472,17 @@ void main_view() /// this function to show the pattern on screen
         {
             new_account();
         }
-        if(choose == "4")
+        if(choose == "2")
         {
-            show_account();
+            with_draw();
         }
         if(choose == "3")
         {
             deposit();
         }
-        if(choose == "2")
+        if(choose == "4")
         {
-            with_draw();
+            show_account();
         }
         if(choose == "5")
         {
@@ -417,6 +491,10 @@ void main_view() /// this function to show the pattern on screen
         if(choose == "6")
         {
             close_account();
+        }
+        if(choose == "7")
+        {
+            modify();
         }
     }
     while(choose != "8");
