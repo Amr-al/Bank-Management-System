@@ -193,6 +193,88 @@ void deposit()
         file << tmp << "\n";
         file.close();
     }
+    cout << "\t\tPROCESS DONE SUCESSFULLY";
+    _sleep(2000);
+    system("CLS");
+    main_view();
+}
+
+void with_draw()
+{
+    system("CLS");
+    string ac_num,tmp,tmp2,amount;
+    ll balance = 0;
+    cout << "\n\n\n\t\tEnter the Account No. : ";
+    cin >> ac_num;
+    cout << "\n\n";
+    ifstream myfile; int check = 0;
+    myfile.open("clients_data.txt");
+
+    while(getline(myfile, tmp))
+    {
+        tmp2 = tmp;
+        auto it = tmp2.find(' ');
+        if(tmp.substr(0,it) == ac_num){
+            check = 1;
+            cout << "\t\tAccount No. : " << ac_num << "\n";
+            tmp2.erase(0,it+1);
+            it = tmp2.find(' ');
+            cout << "\t\tAccount Holder Name : " << tmp2.substr(0,it) <<'\n';
+            tmp2.erase(0,it+1);
+            it = tmp2.find(' ');
+            cout << "\t\tType of Account : " << tmp2.substr(0,it) << '\n';
+            tmp2.erase(0,it+1);
+            amount = tmp2;
+            cout << "\t\tBalance amount : " << amount << "\n\n";
+            cout <<"\t\tTO DEPOSITSS AMOUNT\n\n\t\tEnter The amount to be deposited : ";
+            cin >> balance;
+            ll cur_amount = string_to_int(amount);
+            if(cur_amount < balance)
+            {
+                cout << "\t\tInsufficience balance";
+                _sleep(2000);
+                myfile.close();
+                main_view();
+                return;
+            }
+            balance = cur_amount - balance;
+            break;
+        }
+    }
+    myfile.close();
+    if(!check){
+        system("CLS");
+        cout << "\n\n\t\t\t\t\t THERE IS NO SUCH ACCOUNT";
+        _sleep(2000);
+        system("CLS");
+        main_view();
+    }else{
+        myfile.open("clients_data.txt");
+        ofstream out("tmp.txt"),file;
+        while(getline(myfile,tmp2))
+        {
+            if(tmp != tmp2)
+                out << tmp2 <<"\n";
+        }
+        myfile.close();
+        out.close();
+        // delete the original file
+        remove("clients_data.txt");
+        // rename old to new
+        rename("tmp.txt","clients_data.txt");
+        auto it = tmp.find(amount);
+        tmp.erase(it,tmp.size());
+        tmp2 = int_to_string(balance);
+        for(auto it:tmp2)
+            tmp.push_back(it);
+        file.open("clients_data.txt",ios::app);
+        file << tmp << "\n";
+        file.close();
+    }
+    cout << "\t\tPROCESS DONE SUCESSFULLY";
+    _sleep(2000);
+    system("CLS");
+    main_view();
 }
 void main_view() /// this function to show the pattern on screen
 {
@@ -236,6 +318,10 @@ void main_view() /// this function to show the pattern on screen
         if(choose == "3")
         {
             deposit();
+        }
+        if(choose == "2")
+        {
+            with_draw();
         }
     }
     while(choose != "8");
